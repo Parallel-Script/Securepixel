@@ -27,9 +27,9 @@ pipeline {
                   sh '''
                     mkdir -p ~/.ssh
                     ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
-                
+
                     scp -o StrictHostKeyChecking=no docker-compose.yml nginx/default.conf ubuntu@23.23.60.36:/home/ubuntu/
-                
+
                     ssh -o StrictHostKeyChecking=no ubuntu@23.23.60.36 '
                       docker stop django_app nginx_proxy || true &&
                       docker rm django_app nginx_proxy || true &&
@@ -37,7 +37,6 @@ pipeline {
                     '
                   '''
                 }
-
             }
         }
     }
