@@ -36,7 +36,8 @@ pipeline {
                       docker-compose up -d --build
                     '
                   '''
-                }                
+                }  
+                              
             }
         }
     }
