@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Parallel-Script/Securepixel.git'
+                git branch: 'main', url: 'https://github.com/Parallel-Script/Securepixel.git'
             }
         }
 
