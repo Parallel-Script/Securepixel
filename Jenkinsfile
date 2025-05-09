@@ -25,7 +25,8 @@ pipeline {
             steps {
                 sshagent (credentials: ['app-ssh-key']) {
                     sh '''
-                    scp docker-compose.yml nginx/default.conf ec2-user@23.23.60.36:/home/ec2-user/
+                    ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
+                    scp docker-compose.yml nginx/default.conf ec2-user@23.23.60.36:/home/ubuntu/
                     ssh ec2-user@23.23.60.36 '
                       docker stop django_app nginx_proxy || true &&
                       docker rm django_app nginx_proxy || true &&
