@@ -23,22 +23,21 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent (credentials: ['app-ssh-key']) {
-                    sh '''
-                      mkdir -p ~/.ssh
-                      ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
-                    
-                      scp docker-compose.yml nginx/default.conf ubuntu@23.23.60.36:/home/ubuntu/
-                    
-                      ssh ubuntu@23.23.60.36 '
-                        docker stop django_app nginx_proxy || true &&
-                        docker rm django_app nginx_proxy || true &&
-                        docker-compose up -d --build
-                      '
-                    '''
-
-
+                sshagent(['app-ec2-ssh']) {
+                  sh '''
+                    mkdir -p ~/.ssh
+                    ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
+                
+                    scp -o StrictHostKeyChecking=no docker-compose.yml nginx/default.conf ubuntu@23.23.60.36:/home/ubuntu/
+                
+                    ssh -o StrictHostKeyChecking=no ubuntu@23.23.60.36 '
+                      docker stop django_app nginx_proxy || true &&
+                      docker rm django_app nginx_proxy || true &&
+                      docker-compose up -d --build
+                    '
+                  '''
                 }
+
             }
         }
     }
