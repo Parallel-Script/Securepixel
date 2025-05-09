@@ -25,19 +25,19 @@ pipeline {
             steps {
                 sshagent (credentials: ['app-ssh-key']) {
                     sh '''
-                     mkdir -p ~/.ssh
-                     ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
-                     scp docker-compose.yml nginx/default.conf ec2-user@23.23.60.36:/home/ubuntu/
-                     ssh ec2-user@23.23.60.36 'docker stop django_app nginx_proxy || true && docker rm django_app nginx_proxy || true && docker-compose up -d --build'
-
-                    // ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
-                    // scp docker-compose.yml nginx/default.conf ec2-user@23.23.60.36:/home/ubuntu/
-                    // ssh ec2-user@23.23.60.36 '
-                    //   docker stop django_app nginx_proxy || true &&
-                    //   docker rm django_app nginx_proxy || true &&
-                    //   docker-compose up -d --build
-                    // '
+                      mkdir -p ~/.ssh
+                      ssh-keyscan -H 23.23.60.36 >> ~/.ssh/known_hosts
+                    
+                      scp docker-compose.yml nginx/default.conf ubuntu@23.23.60.36:/home/ubuntu/
+                    
+                      ssh ubuntu@23.23.60.36 '
+                        docker stop django_app nginx_proxy || true &&
+                        docker rm django_app nginx_proxy || true &&
+                        docker-compose up -d --build
+                      '
                     '''
+
+
                 }
             }
         }
