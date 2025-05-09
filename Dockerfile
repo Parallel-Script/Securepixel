@@ -1,20 +1,13 @@
-# Use an official Python image instead of Ubuntu
 FROM python:3.12-slim
 
-# Set the working directory inside the container
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
-# Copy the requirements and application code to the container
-COPY requirments.txt /app/
-COPY SecurePixel /app/
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirments.txt
+COPY . /app/
 
-# Expose the port your Django app runs on
-EXPOSE 8000
-
-# Run the Django application
-ENTRYPOINT ["python3"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
-
+CMD ["gunicorn", "SecurePixel.wsgi:application", "--bind", "0.0.0.0:8000"]
