@@ -1,14 +1,17 @@
 FROM python:3.12-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-
 WORKDIR /app
+
+# Add system dependencies for mysqlclient
+RUN apt-get update && apt-get install -y \
+    gcc \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirments.txt /app/
 RUN pip install --no-cache-dir -r requirments.txt
 
 COPY . /app/
 
-CMD ["gunicorn", "SecurePixel.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
